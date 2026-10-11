@@ -2,6 +2,7 @@
 
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { validateProfileImage } from "@/lib/profileImage";
 
 export async function getMyProfile(): Promise<{ image: string | null; createdAt: string }> {
   const user = await requireAuth();
@@ -15,15 +16,8 @@ export async function getMyProfile(): Promise<{ image: string | null; createdAt:
 export async function updateProfileImage(dataUrl: string): Promise<{ success: boolean }> {
   const user = await requireAuth();
 
-  const validPrefix = /^data:image\/(jpeg|png|svg\+xml);base64,/;
-  if (!validPrefix.test(dataUrl)) {
-    throw new Error("Formato immagine non valido. Usa JPEG, PNG o SVG.");
-  }
-
-  // base64 encodes 3 bytes as 4 chars; 10 MB * 4/3 ≈ 13 981 013 chars
-  if (dataUrl.length > 13_981_013) {
-    throw new Error("L'immagine supera il limite di 10 MB.");
-  }
+  const error = validateProfileImage(dataUrl);
+  if (error) throw new Error(error);
 
   await prisma.user.update({
     where: { id: user.id },

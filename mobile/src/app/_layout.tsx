@@ -7,9 +7,11 @@ import { ActivityIndicator, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider, useAuth } from "@/auth/AuthProvider";
 import { queryClient } from "@/lib/queryClient";
+import { ThemeProvider, useTheme } from "@/theme/ThemeProvider";
 
 function RootNavigator() {
   const { state } = useAuth();
+  const { scheme } = useTheme();
 
   if (state.status === "loading") {
     return (
@@ -22,14 +24,17 @@ function RootNavigator() {
   // Le route protette sono raggiungibili solo con la guardia attiva:
   // senza sessione si finisce sempre su /login, e viceversa.
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Protected guard={state.status === "signedIn"}>
-        <Stack.Screen name="(app)" />
-      </Stack.Protected>
-      <Stack.Protected guard={state.status === "signedOut"}>
-        <Stack.Screen name="login" />
-      </Stack.Protected>
-    </Stack>
+    <>
+      <StatusBar style={scheme === "dark" ? "light" : "dark"} />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Protected guard={state.status === "signedIn"}>
+          <Stack.Screen name="(app)" />
+        </Stack.Protected>
+        <Stack.Protected guard={state.status === "signedOut"}>
+          <Stack.Screen name="login" />
+        </Stack.Protected>
+      </Stack>
+    </>
   );
 }
 
@@ -37,10 +42,11 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <StatusBar style="auto" />
-          <RootNavigator />
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <RootNavigator />
+          </AuthProvider>
+        </ThemeProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
   );

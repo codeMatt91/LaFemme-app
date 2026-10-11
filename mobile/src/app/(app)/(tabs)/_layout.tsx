@@ -1,12 +1,18 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Tabs } from "expo-router";
-
-// Rosa del brand (primary in tailwind.config.js).
-const ACTIVE_TINT = "hsl(346, 77%, 49%)";
+import { HeaderActions, LogoutButton } from "@/features/header/HeaderActions";
+import { useTheme } from "@/theme/ThemeProvider";
 
 export default function TabsLayout() {
+  const { colors } = useTheme();
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: ACTIVE_TINT }}>
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: colors.primary,
+        headerLeft: () => <LogoutButton />,
+        headerRight: () => <HeaderActions />,
+      }}
+    >
       <Tabs.Screen
         name="calendar"
         options={{

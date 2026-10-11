@@ -1,30 +1,41 @@
 /** @type {import('tailwindcss').Config} */
-// Stessa palette del backoffice web (app/globals.css, tema chiaro).
+// Stessa palette del backoffice web: i valori (chiaro e scuro) sono in
+// src/theme/palette.ts e arrivano come variabili CSS dal ThemeProvider.
 module.exports = {
   content: ["./src/**/*.{ts,tsx}"],
   presets: [require("nativewind/preset")],
+  // Il tema si sceglie dall'header (come sul web), non solo dal sistema.
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
-        background: "hsl(0, 0%, 100%)",
-        foreground: "hsl(340, 10%, 10%)",
-        border: "hsl(340, 10%, 90%)",
-        input: "hsl(340, 10%, 90%)",
+        background: "rgb(var(--background) / <alpha-value>)",
+        foreground: "rgb(var(--foreground) / <alpha-value>)",
+        card: {
+          DEFAULT: "rgb(var(--card) / <alpha-value>)",
+          foreground: "rgb(var(--card-foreground) / <alpha-value>)",
+        },
+        border: "rgb(var(--border) / <alpha-value>)",
+        input: "rgb(var(--input) / <alpha-value>)",
         primary: {
-          DEFAULT: "hsl(346, 77%, 49%)",
-          foreground: "hsl(0, 0%, 100%)",
+          DEFAULT: "rgb(var(--primary) / <alpha-value>)",
+          foreground: "rgb(var(--primary-foreground) / <alpha-value>)",
+        },
+        secondary: {
+          DEFAULT: "rgb(var(--secondary) / <alpha-value>)",
+          foreground: "rgb(var(--secondary-foreground) / <alpha-value>)",
         },
         muted: {
-          DEFAULT: "hsl(340, 10%, 96%)",
-          foreground: "hsl(340, 5%, 45%)",
+          DEFAULT: "rgb(var(--muted) / <alpha-value>)",
+          foreground: "rgb(var(--muted-foreground) / <alpha-value>)",
         },
         accent: {
-          DEFAULT: "hsl(346, 77%, 95%)",
-          foreground: "hsl(346, 77%, 30%)",
+          DEFAULT: "rgb(var(--accent) / <alpha-value>)",
+          foreground: "rgb(var(--accent-foreground) / <alpha-value>)",
         },
         destructive: {
-          DEFAULT: "hsl(0, 84%, 60%)",
-          foreground: "hsl(0, 0%, 100%)",
+          DEFAULT: "rgb(var(--destructive) / <alpha-value>)",
+          foreground: "rgb(var(--destructive-foreground) / <alpha-value>)",
         },
       },
     },

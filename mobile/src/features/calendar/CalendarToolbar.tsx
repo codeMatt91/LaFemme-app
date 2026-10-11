@@ -3,6 +3,7 @@ import { endOfWeek, format, startOfWeek } from "date-fns";
 import { it } from "date-fns/locale";
 import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import type { ViewMode } from "./types";
+import { useTheme } from "@/theme/ThemeProvider";
 
 const VIEW_OPTIONS: { value: ViewMode; label: string; icon: keyof typeof Ionicons.glyphMap }[] = [
   { value: "month", label: "Mese", icon: "grid-outline" },
@@ -39,6 +40,7 @@ export function CalendarToolbar({
   onGoToToday,
   onNew,
 }: Props) {
+  const { colors } = useTheme();
   return (
     <View className="gap-2 border-b border-border bg-background px-4 py-3">
       {/* Riga 1: Oggi + navigazione periodo */}
@@ -59,7 +61,7 @@ export function CalendarToolbar({
             hitSlop={8}
             className="p-1.5"
           >
-            <Ionicons name="chevron-back" size={18} color="hsl(340, 10%, 10%)" />
+            <Ionicons name="chevron-back" size={18} color={colors.foreground} />
           </Pressable>
           <Text
             numberOfLines={1}
@@ -74,7 +76,7 @@ export function CalendarToolbar({
             hitSlop={8}
             className="p-1.5"
           >
-            <Ionicons name="chevron-forward" size={18} color="hsl(340, 10%, 10%)" />
+            <Ionicons name="chevron-forward" size={18} color={colors.foreground} />
           </Pressable>
         </View>
         <View className="w-5">{isFetching && <ActivityIndicator size="small" />}</View>
@@ -93,7 +95,7 @@ export function CalendarToolbar({
                 accessibilityState={{ selected: active }}
                 className={`flex-row items-center gap-1.5 px-3 py-1.5 ${active ? "bg-primary" : ""}`}
               >
-                <Ionicons name={option.icon} size={14} color={active ? "#FFFFFF" : "hsl(340, 10%, 10%)"} />
+                <Ionicons name={option.icon} size={14} color={active ? "#FFFFFF" : colors.foreground} />
                 <Text className={`text-sm font-medium ${active ? "text-primary-foreground" : "text-foreground"}`}>
                   {option.label}
                 </Text>

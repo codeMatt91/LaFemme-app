@@ -2,6 +2,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Linking, Pressable, Text, View } from "react-native";
 import { formatDateOnly } from "@/lib/dates";
 import type { Customer } from "./types";
+import { useTheme } from "@/theme/ThemeProvider";
 
 interface Props {
   customer: Customer;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export function CustomerCard({ customer: c, deleting, onEdit, onDelete }: Props) {
+  const { colors } = useTheme();
   const name = `${c.firstName} ${c.lastName}`;
   return (
     <View className={`rounded-xl border border-border bg-background p-4 ${deleting ? "opacity-50" : ""}`}>
@@ -26,7 +28,7 @@ export function CustomerCard({ customer: c, deleting, onEdit, onDelete }: Props)
               accessibilityLabel={`Chiama ${name}`}
               className="mt-0.5 flex-row items-center gap-1"
             >
-              <Ionicons name="call-outline" size={12} color="hsl(340, 5%, 45%)" />
+              <Ionicons name="call-outline" size={12} color={colors.mutedForeground} />
               <Text className="text-sm text-muted-foreground">{c.phoneNumber}</Text>
             </Pressable>
           )}
@@ -45,7 +47,7 @@ export function CustomerCard({ customer: c, deleting, onEdit, onDelete }: Props)
             hitSlop={4}
             className="rounded-lg p-2"
           >
-            <Ionicons name="pencil-outline" size={18} color="hsl(340, 10%, 10%)" />
+            <Ionicons name="pencil-outline" size={18} color={colors.foreground} />
           </Pressable>
           <Pressable
             onPress={onDelete}
@@ -55,7 +57,7 @@ export function CustomerCard({ customer: c, deleting, onEdit, onDelete }: Props)
             hitSlop={4}
             className="rounded-lg p-2"
           >
-            <Ionicons name="trash-outline" size={18} color="hsl(0, 84%, 60%)" />
+            <Ionicons name="trash-outline" size={18} color={colors.destructive} />
           </Pressable>
         </View>
       </View>

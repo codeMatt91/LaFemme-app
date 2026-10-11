@@ -1,6 +1,7 @@
 import DateTimePicker, { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { Platform, Pressable, Text, View } from "react-native";
 import { formatDateOnly, parseDateOnly, toDateOnlyString } from "@/lib/dates";
+import { useTheme } from "@/theme/ThemeProvider";
 
 interface Props {
   label: string;
@@ -14,6 +15,7 @@ interface Props {
 
 // Campo data facoltativo: si può impostare e rimuovere.
 export function DateField({ label, value, onChange, maximumDate, initialDate = new Date() }: Props) {
+  const { scheme } = useTheme();
   const current = value ? parseDateOnly(value) : initialDate;
 
   function openAndroid() {
@@ -35,6 +37,7 @@ export function DateField({ label, value, onChange, maximumDate, initialDate = n
             mode="date"
             display="compact"
             locale="it-IT"
+            themeVariant={scheme}
             maximumDate={maximumDate}
             onValueChange={(_e, date) => onChange(toDateOnlyString(date))}
           />

@@ -1,6 +1,7 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { useTheme } from "@/theme/ThemeProvider";
 
 export interface SelectItem {
   value: string;
@@ -31,6 +32,7 @@ export function SelectField({
   searchPlaceholder = "Cerca...",
   emptyMessage = "Nessun risultato",
 }: Props) {
+  const { colors } = useTheme();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const selected = items.find((i) => i.value === value);
@@ -60,7 +62,7 @@ export function SelectField({
         <Text numberOfLines={1} className={`flex-1 ${selected ? "text-foreground" : "text-muted-foreground"}`}>
           {selected?.label ?? placeholder}
         </Text>
-        <Ionicons name={open ? "chevron-up" : "chevron-down"} size={16} color="hsl(340, 5%, 45%)" />
+        <Ionicons name={open ? "chevron-up" : "chevron-down"} size={16} color={colors.mutedForeground} />
       </Pressable>
 
       {open && (

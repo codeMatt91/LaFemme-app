@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
-  Modal,
   Platform,
   Pressable,
   ScrollView,
@@ -16,6 +15,8 @@ import { DateField } from "@/components/DateField";
 import { ApiError } from "@/lib/api";
 import { useSaveCustomer } from "./api";
 import type { Customer } from "./types";
+import { useTheme } from "@/theme/ThemeProvider";
+import { ThemedModal } from "@/components/ThemedModal";
 
 interface Props {
   open: boolean;
@@ -38,6 +39,7 @@ function Field({ label, inRow = false, children }: { label: string; inRow?: bool
 const INPUT_CLASS = "rounded-lg border border-input px-3 py-3 text-foreground";
 
 export function CustomerForm({ open, onClose, customer }: Props) {
+  const { colors } = useTheme();
   const saveMutation = useSaveCustomer();
   const [error, setError] = useState<string | null>(null);
   const [firstName, setFirstName] = useState("");
@@ -79,12 +81,12 @@ export function CustomerForm({ open, onClose, customer }: Props) {
   }
 
   return (
-    <Modal visible={open} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
+    <ThemedModal visible={open} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
       <SafeAreaView edges={["top", "bottom"]} className="flex-1 bg-background">
         <View className="flex-row items-center justify-between border-b border-border px-5 py-4">
           <Text className="font-semibold text-foreground">{customer ? "Modifica cliente" : "Nuovo cliente"}</Text>
           <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel="Chiudi" hitSlop={8}>
-            <Ionicons name="close" size={20} color="hsl(340, 10%, 10%)" />
+            <Ionicons name="close" size={20} color={colors.foreground} />
           </Pressable>
         </View>
 
@@ -169,6 +171,6 @@ export function CustomerForm({ open, onClose, customer }: Props) {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
-    </Modal>
+    </ThemedModal>
   );
 }

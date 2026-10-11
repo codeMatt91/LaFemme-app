@@ -6,8 +6,10 @@ import { CustomerCard } from "./CustomerCard";
 import { CustomerForm } from "./CustomerForm";
 import { useCustomers, useDeleteCustomer } from "./api";
 import type { Customer } from "./types";
+import { useTheme } from "@/theme/ThemeProvider";
 
 export function CustomersScreen() {
+  const { colors } = useTheme();
   const customersQuery = useCustomers();
   const deleteMutation = useDeleteCustomer();
   const [search, setSearch] = useState("");
@@ -59,7 +61,7 @@ export function CustomersScreen() {
     <View className="gap-3 pb-3">
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center gap-2">
-          <Ionicons name="people-outline" size={20} color="hsl(346, 77%, 49%)" />
+          <Ionicons name="people-outline" size={20} color={colors.primary} />
           <View>
             <Text className="font-semibold text-foreground">Anagrafica Clienti</Text>
             <Text className="text-sm text-muted-foreground">{customers.length} clienti registrati</Text>
@@ -76,7 +78,7 @@ export function CustomersScreen() {
       </View>
 
       <View className="flex-row items-center rounded-lg border border-input px-3">
-        <Ionicons name="search" size={16} color="hsl(340, 5%, 45%)" />
+        <Ionicons name="search" size={16} color={colors.mutedForeground} />
         <TextInput
           value={search}
           onChangeText={setSearch}

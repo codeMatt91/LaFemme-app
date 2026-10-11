@@ -5,7 +5,6 @@ import {
   ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
-  Modal,
   Platform,
   Pressable,
   ScrollView,
@@ -20,6 +19,8 @@ import { ApiError } from "@/lib/api";
 import { useCustomers } from "@/features/customers/api";
 import { useDeleteAppointment, useSaveAppointment } from "./api";
 import type { Appointment, PaymentStatus, Person, ServiceType } from "./types";
+import { useTheme } from "@/theme/ThemeProvider";
+import { ThemedModal } from "@/components/ThemedModal";
 
 const PAYMENT_OPTIONS: { value: PaymentStatus; label: string }[] = [
   { value: "PAID", label: "Pagato" },
@@ -50,6 +51,7 @@ function errorMessage(e: unknown, fallback: string): string {
 }
 
 export function AppointmentModal({ open, onClose, appointment, defaultDate, employees, serviceTypes }: Props) {
+  const { colors } = useTheme();
   const customersQuery = useCustomers(open);
   const saveMutation = useSaveAppointment();
   const deleteMutation = useDeleteAppointment();
@@ -150,14 +152,14 @@ export function AppointmentModal({ open, onClose, appointment, defaultDate, empl
   }
 
   return (
-    <Modal visible={open} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
+    <ThemedModal visible={open} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
       <SafeAreaView edges={["top", "bottom"]} className="flex-1 bg-background">
         <View className="flex-row items-center justify-between border-b border-border px-5 py-4">
           <Text className="font-semibold text-foreground">
             {appointment ? "Modifica appuntamento" : "Nuovo appuntamento"}
           </Text>
           <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel="Chiudi" hitSlop={8}>
-            <Ionicons name="close" size={20} color="hsl(340, 10%, 10%)" />
+            <Ionicons name="close" size={20} color={colors.foreground} />
           </Pressable>
         </View>
 
@@ -243,7 +245,7 @@ export function AppointmentModal({ open, onClose, appointment, defaultDate, empl
                   accessibilityRole="button"
                   className="flex-row items-center gap-1.5 rounded-lg border border-destructive/20 px-3 py-2.5"
                 >
-                  <Ionicons name="trash-outline" size={16} color="hsl(0, 84%, 60%)" />
+                  <Ionicons name="trash-outline" size={16} color={colors.destructive} />
                   <Text className="text-sm font-medium text-destructive">Elimina</Text>
                 </Pressable>
               )}
@@ -269,6 +271,6 @@ export function AppointmentModal({ open, onClose, appointment, defaultDate, empl
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
-    </Modal>
+    </ThemedModal>
   );
 }

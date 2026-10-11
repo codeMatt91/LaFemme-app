@@ -2,6 +2,7 @@ import DateTimePicker, { DateTimePickerAndroid } from "@react-native-community/d
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import { Platform, Pressable, Text, View } from "react-native";
+import { useTheme } from "@/theme/ThemeProvider";
 
 interface Props {
   label: string;
@@ -12,6 +13,7 @@ interface Props {
 // Data + ora. Su iOS usa i selettori compatti nativi; su Android, che non ha
 // una modalità data+ora unica, apre in sequenza i dialoghi di data e ora.
 export function DateTimeField({ label, value, onChange }: Props) {
+  const { scheme } = useTheme();
   if (Platform.OS === "ios") {
     return (
       <View className="gap-1">
@@ -22,6 +24,7 @@ export function DateTimeField({ label, value, onChange }: Props) {
             mode="date"
             display="compact"
             locale="it-IT"
+            themeVariant={scheme}
             onValueChange={(_e, date) => onChange(date)}
           />
           <DateTimePicker
@@ -29,6 +32,7 @@ export function DateTimeField({ label, value, onChange }: Props) {
             mode="time"
             display="compact"
             locale="it-IT"
+            themeVariant={scheme}
             onValueChange={(_e, date) => onChange(date)}
           />
         </View>
