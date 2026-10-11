@@ -1,10 +1,10 @@
 import { AdminOnly } from "@/components/AdminOnly";
-import { PlaceholderScreen } from "@/components/PlaceholderScreen";
+import { EmployeesScreen } from "@/features/employees/EmployeesScreen";
 
-export default function EmployeesScreen() {
+export default function EmployeesRoute() {
   return (
     <AdminOnly>
-      <PlaceholderScreen title="Dipendenti" description="Gestione degli account del personale." />
+      <EmployeesScreen />
     </AdminOnly>
   );
 }

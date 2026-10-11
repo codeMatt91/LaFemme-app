@@ -31,7 +31,8 @@
           "photosPermission": "La Femme usa le tue foto per impostare l'immagine del profilo.",
           "cameraPermission": false
         }
-      ]
+      ],
+      "expo-sharing"
     ],
     "scheme": "lafemme"
   }

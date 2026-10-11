@@ -11,10 +11,12 @@ interface Props {
   maximumDate?: Date;
   /** Data proposta quando il campo è vuoto. */
   initialDate?: Date;
+  /** Campo obbligatorio: nasconde "Rimuovi". */
+  required?: boolean;
 }
 
-// Campo data facoltativo: si può impostare e rimuovere.
-export function DateField({ label, value, onChange, maximumDate, initialDate = new Date() }: Props) {
+// Campo data: se facoltativo si può anche rimuovere.
+export function DateField({ label, value, onChange, maximumDate, initialDate = new Date(), required = false }: Props) {
   const { scheme } = useTheme();
   const current = value ? parseDateOnly(value) : initialDate;
 
@@ -53,7 +55,7 @@ export function DateField({ label, value, onChange, maximumDate, initialDate = n
             </Text>
           </Pressable>
         )}
-        {value && (
+        {value && !required && (
           <Pressable onPress={() => onChange(null)} accessibilityRole="button" hitSlop={8} className="px-2 py-2">
             <Text className="text-sm text-muted-foreground">Rimuovi</Text>
           </Pressable>

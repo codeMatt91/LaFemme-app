@@ -1,10 +1,10 @@
 import { AdminOnly } from "@/components/AdminOnly";
-import { PlaceholderScreen } from "@/components/PlaceholderScreen";
+import { FinanceScreen } from "@/features/finance/FinanceScreen";
 
-export default function FinanceScreen() {
+export default function FinanceRoute() {
   return (
     <AdminOnly>
-      <PlaceholderScreen title="Finanze" description="Cruscotto entrate, uscite e spese." />
+      <FinanceScreen />
     </AdminOnly>
   );
 }

@@ -1,10 +1,10 @@
 import { AdminOnly } from "@/components/AdminOnly";
-import { PlaceholderScreen } from "@/components/PlaceholderScreen";
+import { SettingsScreen } from "@/features/settings/SettingsScreen";
 
-export default function SettingsScreen() {
+export default function SettingsRoute() {
   return (
     <AdminOnly>
-      <PlaceholderScreen title="Impostazioni" description="Tipologie di prestazioni e archiviazione dati." />
+      <SettingsScreen />
     </AdminOnly>
   );
 }

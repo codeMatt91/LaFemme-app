@@ -1,22 +1,10 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { TextInput, View } from "react-native";
 import { DateField } from "@/components/DateField";
 import { ApiError } from "@/lib/api";
 import { useSaveCustomer } from "./api";
 import type { Customer } from "./types";
-import { useTheme } from "@/theme/ThemeProvider";
-import { ThemedModal } from "@/components/ThemedModal";
+import { ErrorBox, FormField, FormSheet, INPUT_CLASS } from "@/components/FormSheet";
 
 interface Props {
   open: boolean;
@@ -27,19 +15,7 @@ interface Props {
 // Data proposta quando la data di nascita è vuota (evita di partire da oggi).
 const BIRTH_DATE_START = new Date(1990, 0, 1);
 
-function Field({ label, inRow = false, children }: { label: string; inRow?: boolean; children: React.ReactNode }) {
-  return (
-    <View className={`gap-1 ${inRow ? "flex-1" : ""}`}>
-      <Text className="text-sm font-medium text-foreground">{label}</Text>
-      {children}
-    </View>
-  );
-}
-
-const INPUT_CLASS = "rounded-lg border border-input px-3 py-3 text-foreground";
-
 export function CustomerForm({ open, onClose, customer }: Props) {
-  const { colors } = useTheme();
   const saveMutation = useSaveCustomer();
   const [error, setError] = useState<string | null>(null);
   const [firstName, setFirstName] = useState("");
@@ -81,96 +57,68 @@ export function CustomerForm({ open, onClose, customer }: Props) {
   }
 
   return (
-    <ThemedModal visible={open} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
-      <SafeAreaView edges={["top", "bottom"]} className="flex-1 bg-background">
-        <View className="flex-row items-center justify-between border-b border-border px-5 py-4">
-          <Text className="font-semibold text-foreground">{customer ? "Modifica cliente" : "Nuovo cliente"}</Text>
-          <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel="Chiudi" hitSlop={8}>
-            <Ionicons name="close" size={20} color={colors.foreground} />
-          </Pressable>
-        </View>
+    <FormSheet
+      open={open}
+      title={customer ? "Modifica cliente" : "Nuovo cliente"}
+      onClose={onClose}
+      onSubmit={handleSubmit}
+      submitting={saveMutation.isPending}
+      submitLabel={customer ? "Aggiorna" : "Crea"}
+    >
+      <View className="flex-row gap-3">
+        <FormField label="Nome *" inRow>
+          <TextInput value={firstName} onChangeText={setFirstName} autoCapitalize="words" className={INPUT_CLASS} />
+        </FormField>
+        <FormField label="Cognome *" inRow>
+          <TextInput value={lastName} onChangeText={setLastName} autoCapitalize="words" className={INPUT_CLASS} />
+        </FormField>
+      </View>
 
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} className="flex-1">
-          <ScrollView contentContainerClassName="gap-4 p-5" keyboardShouldPersistTaps="handled">
-            <View className="flex-row gap-3">
-              <Field label="Nome *" inRow>
-                <TextInput value={firstName} onChangeText={setFirstName} autoCapitalize="words" className={INPUT_CLASS} />
-              </Field>
-              <Field label="Cognome *" inRow>
-                <TextInput value={lastName} onChangeText={setLastName} autoCapitalize="words" className={INPUT_CLASS} />
-              </Field>
-            </View>
+      <FormField label="Telefono">
+        <TextInput
+          value={phoneNumber}
+          onChangeText={setPhoneNumber}
+          keyboardType="phone-pad"
+          textContentType="telephoneNumber"
+          placeholder="+39 333 000 0000"
+          className={INPUT_CLASS}
+        />
+      </FormField>
 
-            <Field label="Telefono">
-              <TextInput
-                value={phoneNumber}
-                onChangeText={setPhoneNumber}
-                keyboardType="phone-pad"
-                textContentType="telephoneNumber"
-                placeholder="+39 333 000 0000"
-                className={INPUT_CLASS}
-              />
-            </Field>
+      <DateField
+        label="Data di nascita"
+        value={birthDate}
+        onChange={setBirthDate}
+        maximumDate={new Date()}
+        initialDate={BIRTH_DATE_START}
+      />
 
-            <DateField
-              label="Data di nascita"
-              value={birthDate}
-              onChange={setBirthDate}
-              maximumDate={new Date()}
-              initialDate={BIRTH_DATE_START}
-            />
+      <FormField label="Email">
+        <TextInput
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          textContentType="emailAddress"
+          placeholder="cliente@esempio.it"
+          className={INPUT_CLASS}
+        />
+      </FormField>
 
-            <Field label="Email">
-              <TextInput
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-                textContentType="emailAddress"
-                placeholder="cliente@esempio.it"
-                className={INPUT_CLASS}
-              />
-            </Field>
+      <FormField label="Note">
+        <TextInput
+          value={notes}
+          onChangeText={setNotes}
+          multiline
+          numberOfLines={3}
+          textAlignVertical="top"
+          placeholder="Allergie, preferenze, note varie..."
+          className={`${INPUT_CLASS} min-h-[88px]`}
+        />
+      </FormField>
 
-            <Field label="Note">
-              <TextInput
-                value={notes}
-                onChangeText={setNotes}
-                multiline
-                numberOfLines={3}
-                textAlignVertical="top"
-                placeholder="Allergie, preferenze, note varie..."
-                className={`${INPUT_CLASS} min-h-[88px]`}
-              />
-            </Field>
-
-            {error && (
-              <View className="rounded-lg border border-destructive/20 bg-destructive/10 px-3 py-2">
-                <Text className="text-sm text-destructive">{error}</Text>
-              </View>
-            )}
-
-            <View className="flex-row gap-2 pt-1">
-              <Pressable onPress={onClose} accessibilityRole="button" className="flex-1 items-center rounded-lg bg-muted py-3">
-                <Text className="text-sm font-medium text-foreground">Annulla</Text>
-              </Pressable>
-              <Pressable
-                onPress={handleSubmit}
-                disabled={saveMutation.isPending}
-                accessibilityRole="button"
-                className="flex-1 items-center rounded-lg bg-primary py-3 disabled:opacity-50"
-              >
-                {saveMutation.isPending ? (
-                  <ActivityIndicator color="white" />
-                ) : (
-                  <Text className="text-sm font-medium text-primary-foreground">{customer ? "Aggiorna" : "Crea"}</Text>
-                )}
-              </Pressable>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </ThemedModal>
+      <ErrorBox message={error} />
+    </FormSheet>
   );
 }

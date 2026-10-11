@@ -1,21 +1,14 @@
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { mobileRoute } from "@/lib/mobileAuth";
 import { validationError } from "@/lib/mobileResponses";
 import { appointmentInclude, appointmentSchema } from "@/lib/validation/appointments";
-
-const rangeSchema = z
-  .object({
-    from: z.string().datetime({ message: "Parametro 'from' non valido." }),
-    to: z.string().datetime({ message: "Parametro 'to' non valido." }),
-  })
-  .refine((r) => new Date(r.to) >= new Date(r.from), { message: "Intervallo di date non valido." });
+import { dateRangeSchema } from "@/lib/validation/dateRange";
 
 // Equivalente di getAppointments(from, to).
 export const GET = mobileRoute(async (req) => {
   const params = Object.fromEntries(new URL(req.url).searchParams);
-  const parsed = rangeSchema.safeParse(params);
+  const parsed = dateRangeSchema.safeParse(params);
   if (!parsed.success) return validationError(parsed.error);
 
   const appointments = await prisma.appointment.findMany({
