@@ -3,22 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { z } from "zod";
 import { ActionResult, zodErrorToMessage } from "@/lib/actionResult";
-
-const customerSchema = z.object({
-  firstName: z.string().min(2, "Il nome è obbligatorio (min. 2 caratteri).").max(50, "Il nome è troppo lungo."),
-  lastName: z.string().min(2, "Il cognome è obbligatorio (min. 2 caratteri).").max(50, "Il cognome è troppo lungo."),
-  phoneNumber: z.string().optional().nullable(),
-  email: z.string().email("Inserisci un indirizzo email valido.").nullable().optional(),
-  birthDate: z.coerce
-    .date({ invalid_type_error: "La data di nascita non è valida." })
-    .max(new Date(), "La data di nascita non può essere nel futuro.")
-    .optional()
-    .nullable(),
-  notes: z.string().max(500, "Le note sono troppo lunghe (max 500 caratteri).").optional().nullable(),
-});
-
+import { customerSchema, type CustomerInput } from "@/lib/validation/customers";
 
 export async function getCustomers(search?: string) {
   await requireAuth();
@@ -51,7 +37,7 @@ export async function getCustomerById(id: string) {
   });
 }
 
-export async function createCustomer(data: z.infer<typeof customerSchema>): Promise<ActionResult> {
+export async function createCustomer(data: CustomerInput): Promise<ActionResult> {
   await requireAuth();
   const parsed = customerSchema.safeParse(data);
   if (!parsed.success) return { success: false, error: zodErrorToMessage(parsed.error) };
@@ -60,7 +46,7 @@ export async function createCustomer(data: z.infer<typeof customerSchema>): Prom
   return { success: true, data: null };
 }
 
-export async function updateCustomer(id: string, data: z.infer<typeof customerSchema>): Promise<ActionResult> {
+export async function updateCustomer(id: string, data: CustomerInput): Promise<ActionResult> {
   await requireAuth();
   const parsed = customerSchema.safeParse(data);
   if (!parsed.success) return { success: false, error: zodErrorToMessage(parsed.error) };

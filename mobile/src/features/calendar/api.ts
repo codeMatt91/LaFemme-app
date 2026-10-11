@@ -11,7 +11,7 @@ import {
   startOfWeek,
 } from "date-fns";
 import { api } from "@/lib/api";
-import type { Appointment, AppointmentInput, Customer, Person, ServiceType, ViewMode } from "./types";
+import type { Appointment, AppointmentInput, Person, ServiceType, ViewMode } from "./types";
 
 // Stesso intervallo caricato da CalendarClient sul web per ogni vista.
 export function getRange(date: Date, view: ViewMode): { from: Date; to: Date } {
@@ -56,14 +56,6 @@ export function useServiceTypes() {
   return useQuery({
     queryKey: ["serviceTypes"],
     queryFn: () => api<{ serviceTypes: ServiceType[] }>("/service-types").then((r) => r.serviceTypes),
-  });
-}
-
-export function useCustomers(enabled: boolean) {
-  return useQuery({
-    queryKey: ["customers"],
-    queryFn: () => api<{ customers: Customer[] }>("/customers").then((r) => r.customers),
-    enabled,
   });
 }
 

@@ -17,7 +17,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { DateTimeField } from "@/components/DateTimeField";
 import { SelectField } from "@/components/SelectField";
 import { ApiError } from "@/lib/api";
-import { useCustomers, useDeleteAppointment, useSaveAppointment } from "./api";
+import { useCustomers } from "@/features/customers/api";
+import { useDeleteAppointment, useSaveAppointment } from "./api";
 import type { Appointment, PaymentStatus, Person, ServiceType } from "./types";
 
 const PAYMENT_OPTIONS: { value: PaymentStatus; label: string }[] = [

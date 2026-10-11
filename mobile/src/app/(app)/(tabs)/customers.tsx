@@ -1,5 +1,3 @@
-import { PlaceholderScreen } from "@/components/PlaceholderScreen";
+import { CustomersScreen } from "@/features/customers/CustomersScreen";
 
-export default function CustomersScreen() {
-  return <PlaceholderScreen title="Clienti" description="L'anagrafica clienti arriverà qui." />;
-}
+export default CustomersScreen;

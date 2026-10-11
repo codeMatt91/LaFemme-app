@@ -27,6 +27,7 @@ In produzione `EXPO_PUBLIC_API_URL` sarà l'URL HTTPS del backoffice su Vercel.
 | `src/app/(app)/(tabs)/` | Schede Calendario, Clienti, Altro |
 | `src/app/(app)/finance.tsx` ecc. | Sezioni admin (Finanze, Dipendenti, Impostazioni), protette da `AdminOnly` |
 | `src/features/calendar/` | Calendario: viste Mese/Settimana/Giorno, legenda prestazioni, modulo appuntamento (crea, modifica, elimina) |
+| `src/features/customers/` | Clienti: elenco con ricerca, chiamata dal telefono, modulo crea/modifica, eliminazione |
 | `src/auth/AuthProvider.tsx` | Stato della sessione, login/logout, verifica del token all'avvio (`GET /api/mobile/me`) |
 | `src/lib/api.ts` | Client HTTP: aggiunge il token Bearer, gestisce errori e 401 |
 | `tailwind.config.js` | Stessa palette del web, usata con NativeWind (`className`) |
